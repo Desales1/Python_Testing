@@ -1,39 +1,57 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GUDLFT Registration</title>
+    <!-- Ajout de Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Ajout de votre propre fichier CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     {% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-    {% for category, message in messages %}
-        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-{% endwith %}
-    <h1>Welcome to the GUDLFT Registration Portal!</h1>
-    Please enter your secretary email to continue:
-    <form action="showSummary" method="post">
-        <label for="email">Email:</label>
-        <input type="email" name="email" id=""/>
-        <button type="submit">Enter</button>
-    </form>
-
-    <!-- Tableau affichant le nombre de points de tous les clubs -->
-    <table>
-        <tr>
-            <th>Club</th>
-            <th>Points</th>
-        </tr>
-        {% for club in clubs %}
-        <tr>
-            <td>{{ club['name'] }}</td>
-            <td>{{ club['points'] }}</td>
-        </tr>
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                {{ message }}
+            </div>
         {% endfor %}
-    </table>
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <h1 class="text-center my-4">Welcome to the GUDLFT Registration Portal!</h1>
+        <p>Please enter your secretary email to continue:</p>
+        <form action="showSummary" method="post" class="my-4">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" class="form-control"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Enter</button>
+        </form>
+
+        <!-- Tableau affichant le nombre de points de tous les clubs -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Club</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for club in clubs %}
+                <tr>
+                    <td>{{ club['name'] }}</td>
+                    <td>{{ club['points'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Ajout de jQuery et Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Ajout de votre propre fichier JS -->
+    <script src="script.js"></script>
 </body>
 </html>
