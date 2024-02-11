@@ -11,7 +11,7 @@ class TestPurchasePlacesNoCompetition(TestCase):
 
     def test_purchasePlaces_no_competition(self):
         response = self.client.post('/purchasePlaces', data={'club': 'Iron Temple', 'places': '4'}, follow_redirects=True)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

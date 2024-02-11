@@ -52,18 +52,35 @@ def book(competition,club):
 
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
-    
-    # Convertissez les points du club en entier avant de faire la comparaison
-    if int(club['points']) >= placesRequired:
-        club['points'] = str(int(club['points']) - placesRequired)  # Déduisez les points du club et convertissez-les en chaîne de caractères
-        competition['numberOfPlaces'] = str(int(competition['numberOfPlaces']) - placesRequired)
-        flash('Great-booking complete!')
-    else:
-        flash('Not enough points for this reservation.')
-    
+    competition_name = request.form.get('competition')
+    club_name = request.form.get('club')
+    places = request.form.get('places')
+
+    # Recherche de la compétition et du club
+    competition = next((c for c in competitions if c['name'] == competition_name), None)
+    club = next((c for c in clubs if c['name'] == club_name), None)
+
+    # Vérifier si l'utilisateur a fourni toutes les données nécessaires
+    if not competition or not club or not places:
+        flash('Veuillez fournir toutes les informations nécessaires.')
+        return render_template('welcome.html', club=club, competitions=competitions)  # Passer 'club' au template
+
+    placesRequired = int(places)
+
+    # Vérifier si l'utilisateur essaie d'acheter plus de 12 billets
+    if placesRequired > 12:
+        flash('Vous ne pouvez pas acheter plus de 12 billets.')
+        return render_template('welcome.html', club=club, competitions=competitions)
+
+    # Vérifier si le club a assez de points pour acheter les billets
+    if int(club['points']) < placesRequired:
+        flash('Vous n\'avez pas assez de points pour acheter ces billets.')
+        return render_template('welcome.html', club=club, competitions=competitions)
+
+    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+    club['points'] = int(club['points'])-placesRequired  # Diminuer les points du club
+
+    flash('Réservation réussie !')
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
