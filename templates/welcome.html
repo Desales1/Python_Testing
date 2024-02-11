@@ -5,7 +5,10 @@
     <title>Summary | GUDLFT Registration</title>
 </head>
 <body>
-        <h2>Welcome, {{club['email']}} </h2><a href="{{url_for('logout')}}">Logout</a>
+    <h2>Welcome, {{club['email']}} </h2><a href="{{url_for('logout')}}">Logout</a>
+
+    <!-- Bouton pour afficher les points de tous les clubs -->
+    <a href="{{url_for('connectedtable')}}">Afficher les points de tous les clubs</a>
 
     {% with messages = get_flashed_messages()%}
     {% if messages %}
