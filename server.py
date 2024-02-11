@@ -4,8 +4,11 @@ from flask import Flask,render_template,request,redirect,flash,url_for
 
 def loadClubs():
     with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
+        listOfClubs = json.load(c)['clubs']
+        for club in listOfClubs:
+            club['total_reserved'] = 0  # Initialiser 'total_reserved' pour chaque club
+            club['reserved'] = {}  # Initialiser 'reserved' pour chaque club
+        return listOfClubs
 
 
 def loadCompetitions():
@@ -63,12 +66,15 @@ def purchasePlaces():
     # Vérifier si l'utilisateur a fourni toutes les données nécessaires
     if not competition or not club or not places:
         flash('Veuillez fournir toutes les informations nécessaires.')
-        return render_template('welcome.html', club=club, competitions=competitions)  # Passer 'club' au template
+        return render_template('welcome.html', club=club, competitions=competitions)
 
     placesRequired = int(places)
 
-    # Vérifier si l'utilisateur essaie d'acheter plus de 12 billets
-    if placesRequired > 12:
+    # Vérifier si l'utilisateur essaie de réserver un nombre négatif ou plus de 12 billets pour une compétition spécifique
+    if placesRequired <= 0:
+        flash('Le nombre de billets doit être un nombre positif.')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    elif club['reserved'].get(competition_name, 0) + placesRequired > 12:
         flash('Vous ne pouvez pas acheter plus de 12 billets.')
         return render_template('welcome.html', club=club, competitions=competitions)
 
@@ -79,9 +85,11 @@ def purchasePlaces():
 
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
     club['points'] = int(club['points'])-placesRequired  # Diminuer les points du club
+    club['reserved'][competition_name] = club['reserved'].get(competition_name, 0) + placesRequired  # Mettre à jour le total des places réservées pour cette compétition
 
     flash('Réservation réussie !')
     return render_template('welcome.html', club=club, competitions=competitions)
+
 
 
 
