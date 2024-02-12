@@ -107,7 +107,7 @@ def book(competition,club):
     if foundClub and foundCompetition:
         return render_template('booking.html',club=foundClub[0],competition=foundCompetition[0])
     else:
-        flash("Something went wrong-please try again")
+        flash("Something went wrong-please try again", 'error')
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
@@ -123,29 +123,29 @@ def purchasePlaces():
 
     # Vérifier si l'utilisateur a fourni toutes les données nécessaires
     if not competition or not club or not places:
-        flash('Veuillez fournir toutes les informations nécessaires.')
+        flash('Veuillez fournir toutes les informations nécessaires.', 'error')
         return render_template('welcome.html', club=club, competitions=competitions)
 
     placesRequired = int(places)
 
     # Vérifier si l'utilisateur essaie de réserver un nombre négatif ou plus de 12 billets pour une compétition spécifique
     if placesRequired <= 0:
-        flash('Le nombre de billets doit être un nombre positif.')
+        flash('Le nombre de billets doit être un nombre positif.', 'error')
         return render_template('welcome.html', club=club, competitions=competitions)
     elif club['reserved'].get(competition_name, 0) + placesRequired > 12:
-        flash('Vous ne pouvez pas acheter plus de 12 billets.')
+        flash('Vous ne pouvez pas acheter plus de 12 billets.', 'error')
         return render_template('welcome.html', club=club, competitions=competitions)
 
     # Vérifier si le club a assez de points pour acheter les billets
     if int(club['points']) < placesRequired:
-        flash('Vous n\'avez pas assez de points pour acheter ces billets.')
+        flash('Vous n\'avez pas assez de points pour acheter ces billets.', 'error')
         return render_template('welcome.html', club=club, competitions=competitions)
 
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
     club['points'] = int(club['points'])-placesRequired  # Diminuer les points du club
     club['reserved'][competition_name] = club['reserved'].get(competition_name, 0) + placesRequired  # Mettre à jour le total des places réservées pour cette compétition
 
-    flash('Réservation réussie !')
+    flash('Réservation réussie !''success')
     return render_template('welcome.html', club=club, competitions=competitions)
 
 

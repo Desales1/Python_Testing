@@ -35,14 +35,14 @@
 
     <div class="container" style="margin-top: 80px;">
         <h2>Welcome, {{club['email']}} </h2>
-        {% with messages = get_flashed_messages()%}
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul>
-            {% for message in messages %}
-                <li>{{message}}</li>
+            {% for category, message in messages %}
+                <li class="{{ 'text-danger' if category == 'error' else 'text-success' }}">{{message}}</li>
             {% endfor %}
             </ul>
-        {% endif%}
+        {% endif %}        
         Points available: {{club['points']}}
         <h3>Competitions:</h3>
         <ul>
