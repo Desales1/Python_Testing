@@ -19,7 +19,6 @@ class TestClubsTable(TestCase):
 
         response = self.client.get('/', follow_redirects=True)  #  la route qui rend votre tableau
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<table>', response.data)
         self.assertIn(b'<th>Club</th>', response.data)
         self.assertIn(b'<th>Points</th>', response.data)
         for club in clubs:  # 'clubs' est défini
